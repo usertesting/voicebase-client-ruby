@@ -1,28 +1,54 @@
-# Voicebase::Client::Ruby
+# Voicebase Client Ruby
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/voicebase/client/ruby`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+This is a Ruby client to the VoiceBase API Version [1.x](http://www.voicebase.com/developers/) and [2.x](https://apis.voicebase.com). Some portions of this gem were derived from [voicebase-client-ruby](https://github.com/popuparchive/voicebase-client-ruby).
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'voicebase-client-ruby'
+gem 'voicebase-client-ruby', github: "usertesting/voicebase-client-ruby"
 ```
 
 And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install voicebase-client-ruby
-
 ## Usage
 
-TODO: Write usage instructions here
+For VoiceBase API V1.x:
+
+```ruby
+require 'voicebase'
+
+client = VoiceBase::Client.new({
+  api_version: "1.1",
+  auth_key: "my-voicebase-key",
+  auth_secret: "my-voicebase-secret",
+})
+
+client.upload_media({
+  media_url: "http://my.media-example.com/media1.mp3",
+  title: "My fancy media",
+  transcription_type: 'machine',
+  external_id: 'abcd1234',
+  machine_ready_callback: "http://my.example.com/success",
+  error_callback: "http://my.example.com/error"
+})
+
+```
+
+For VoiceBase API V2.x:
+
+```ruby
+client = VoiceBase::Client.new({
+  api_version: "2.0.beta",
+  auth_key: "my-voicebase-key",
+  auth_secret: "my-voicebase-secret",
+})
+
+...
+```
 
 ## Development
 
@@ -32,5 +58,5 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/voicebase-client-ruby.
+Bug reports and pull requests are welcome on GitHub at https://github.com/voicebase/voicebase-client-ruby.
 
