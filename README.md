@@ -41,6 +41,8 @@ client.upload_media({
 For VoiceBase API V2.x:
 
 ```ruby
+require 'voicebase'
+
 client = VoiceBase::Client.new({
   api_version: "2.0.beta",
   auth_key: "my-voicebase-key",
