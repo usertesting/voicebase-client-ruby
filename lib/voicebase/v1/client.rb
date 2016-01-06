@@ -5,7 +5,7 @@ module VoiceBase
 
       TOKEN_TIMEOUT_IN_MS = 1440
       PARAM_NORMALIZATION = {"Url" => "URL", "Id" => "ID", "Callback" => "CallBack"}
-      ACTIONS             = ['uploadMedia', 'getTranscript', 'deleteFile']
+      ACTIONS             = ['uploadMedia', 'getTranscript', 'deleteFile', 'getFileStatus']
 
       def self.extended(client, args = {})
         client.api_host     = client.args[:api_host] || ENV.fetch('VOICEBASE_V1_API_HOST', 'https://api.voicebase.com')

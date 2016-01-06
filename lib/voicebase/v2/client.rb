@@ -25,25 +25,38 @@ module VoiceBase
         raise VoiceBase::AuthenticationError, response.status_message
       end
 
-      def upload_media(args = {})
+      def upload_media(args = {}, headers = {})
         body = if args[:media_url]
           multipart_query({'media': args[:media_url]})
         elsif args[:media_file]
           multipart_query({'media': File.open(args[:media_file])})
         else
-          raise ArgumentError, "Specify either :media_url or :media_file"
+          raise ArgumentError, "Missing argument :media_url or :media_file"
         end
         VoiceBase::Response.new(self.class.post(
           uri + '/media',
-          headers: multipart_headers,
+          headers: multipart_headers(headers),
           body: body
         ), api_version)
       end
 
-      def get_transcript(args = {})
+      def get_transcript(args = {}, headers = {})
+        raise ArgumentError, "Missing argument :media_id" unless args[:media_id]
+        url = if args[:transcript_id]
+          uri + "/media/#{args[:media_id]}/transcripts/#{args[:transcript_id]}"
+        else
+          uri + "/media/#{args[:media_id]}/transcripts/latest"
+        end
         VoiceBase::Response.new(self.class.get(
-          uri + "/media/#{args[:media_id]}/transcripts",
-          headers: default_headers
+          url, headers: default_headers(headers)
+        ), api_version)
+      end
+
+      def get_media_progress(args = {}, headers = {})
+        raise ArgumentError, "Missing argument :media_id" unless args[:media_id]
+        VoiceBase::Response.new(self.class.get(
+          uri + "/media/#{args[:media_id]}/progress",
+          headers: default_headers(headers)
         ), api_version)
       end
 
@@ -56,7 +69,7 @@ module VoiceBase
       end
 
       def multipart_headers(headers = {})
-        default_headers({ 'Content-Type' => MULTIPART_CONTENT_TYPE })
+        default_headers({'Content-Type' => MULTIPART_CONTENT_TYPE})
       end
 
       def multipart_query(params)

@@ -2,7 +2,7 @@ describe VoiceBase::V1::Client do
   let(:client) { VoiceBase::Client.new }
 
   it "supports client actions" do
-    expect(VoiceBase::V1::Client::ACTIONS).to eq(["uploadMedia", "getTranscript", "deleteFile"])
+    expect(VoiceBase::V1::Client::ACTIONS).to eq(["uploadMedia", "getTranscript", "deleteFile", "getFileStatus"])
   end
 
   it "has a valid uri" do
@@ -44,8 +44,8 @@ describe VoiceBase::V1::Client do
 
     it "should be expired?" do
       token = VoiceBase::Client::Token.new("expired-token", 0)
+      sleep 0.2
       expect(token.expired?).to eq(true)
     end
-
   end
 end

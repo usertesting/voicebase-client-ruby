@@ -16,7 +16,9 @@ And then execute:
 
 ## Usage
 
-For VoiceBase API V1.x:
+### VoiceBase API V1.x:
+
+An example to authenticate with v1 and upload a video file.
 
 ```ruby
 require 'voicebase'
@@ -28,7 +30,7 @@ client = VoiceBase::Client.new({
 })
 
 client.upload_media({
-  media_url: "http://my.media-example.com/media1.mp3",
+  media_url: "http://my.media-example.com/media1.mp4",
   title: "My fancy media",
   transcription_type: 'machine',
   external_id: 'abcd1234',
@@ -48,6 +50,26 @@ client = VoiceBase::Client.new({
   auth_key: "my-voicebase-key",
   auth_secret: "my-voicebase-secret",
 })
+
+client.upload_media({
+  media_url: "http://my.media-example.com/media1.mp4",
+  configuration: {
+    transcripts: {
+      engine: "premium"
+    },
+    publish: {
+      callbacks: [{
+        url: "https://example.org/callback",
+        method: "POST",
+        include: ["transcripts", "keywords", "topics", "metadata"]
+      }]
+    }
+  }
+})
+
+client.get_transcript({
+  media_id: "3b5c78e2-868c-4ce7-a0db-087a02db4042"
+}, {'Accept' => 'text/srt'})
 
 ...
 ```
