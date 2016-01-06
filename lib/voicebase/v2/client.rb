@@ -69,7 +69,7 @@ module VoiceBase
       end
 
       def multipart_headers(headers = {})
-        default_headers({'Content-Type' => MULTIPART_CONTENT_TYPE})
+        default_headers(headers.merge({'Content-Type' => MULTIPART_CONTENT_TYPE}))
       end
 
       def multipart_query(params)
