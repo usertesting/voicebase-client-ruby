@@ -26,17 +26,31 @@ module VoiceBase
       end
 
       def upload_media(args = {}, headers = {})
-        body = if args[:media_url]
-          multipart_query({'media': args[:media_url]})
-        elsif args[:media_file]
-          multipart_query({'media': File.open(args[:media_file])})
-        else
-          raise ArgumentError, "Missing argument :media_url or :media_file"
+        form_args = {'media': require_media_file_or_url(args)}
+        if args[:external_id]
+          form_args.merge!({
+            'metadata': {metadata: {external: {id: args[:external_id]}}}
+          })
         end
+
         VoiceBase::Response.new(self.class.post(
           uri + '/media',
           headers: multipart_headers(headers),
-          body: body
+          body: multipart_query(form_args)
+        ), api_version)
+      end
+
+      def get_media(args = {}, headers = {})
+        raise ArgumentError, "Missing argument :media_id" unless args[:media_id]
+        url = if args[:media_id]
+          uri + "/media/#{args[:media_id]}"
+        elsif args[:external_id]
+          uri + "/media?externalID=#{args[:external_id]}"
+        else
+          raise ArgumentError, "Missing argument :media_url or :media_file"
+        end
+        VoiceBase::Response.new(self.class.get(
+          url, headers: default_headers(headers)
         ), api_version)
       end
 
@@ -85,6 +99,16 @@ module VoiceBase
 
         query = fp.map {|p| "--" + BOUNDARY + "\r\n" + p.to_multipart }.join("") + "--" + BOUNDARY + "--"
         query
+      end
+
+      def require_media_file_or_url(args = {})
+        media = if args[:media_url]
+          args[:media_url]
+        elsif args[:media_file]
+          args[:media_file]
+        else
+          raise ArgumentError, "Missing argument :media_url or :media_file"
+        end
       end
 
       class StringParam
