@@ -38,6 +38,11 @@ client.upload_media({
   error_callback: "http://my.example.com/error"
 })
 
+response = get_transcript(external_id: 'abcd1234' format: "json")
+if response.success?
+  transcript_json = JSON.parse(response.transcript)
+end
+
 ```
 
 For VoiceBase API V2.x:
