@@ -78,8 +78,10 @@ module VoiceBase
 
       def default_headers(headers = {})
         authenticate! unless token
-        {'Authorization' => "Bearer #{token.token}",
-          'User-Agent'   => user_agent}.reject {|k, v| v.blank?}.merge(headers)
+        headers = {'Authorization' => "Bearer #{token.token}",
+          'User-Agent' => user_agent}.reject {|k, v| v.blank?}.merge(headers)
+        puts "> headers\n> #{headers}" if debug
+        headers
       end
 
       def multipart_headers(headers = {})
@@ -92,12 +94,15 @@ module VoiceBase
         params.each do |k, v|
           if v.respond_to?(:path) and v.respond_to?(:read) then
             fp.push(FileParam.new(k, v.path, v.read))
+          elsif v.is_a?(Hash)
+            fp.push(HashParam.new(k, v))
           else
             fp.push(StringParam.new(k, v))
           end
         end
 
         query = fp.map {|p| "--" + BOUNDARY + "\r\n" + p.to_multipart }.join("") + "--" + BOUNDARY + "--"
+        puts "> multipart-query\n> #{query}" if debug
         query
       end
 
@@ -120,6 +125,18 @@ module VoiceBase
 
         def to_multipart
           return "Content-Disposition: form-data; name=\"#{CGI::escape(k.to_s)}\"\r\n\r\n#{v}\r\n"
+        end
+      end
+
+      class HashParam
+        attr_accessor :k, :v
+
+        def initialize(k, v)
+          @k, @v = k, v
+        end
+
+        def to_multipart
+          return "Content-Disposition: form-data; name=\"#{CGI::escape(k.to_s)}\"\r\n\r\n#{JSON.parse(v.to_json)}\r\n"
         end
       end
 
