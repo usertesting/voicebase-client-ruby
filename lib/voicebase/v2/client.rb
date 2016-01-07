@@ -136,7 +136,7 @@ module VoiceBase
         end
 
         def to_multipart
-          return "Content-Disposition: form-data; name=\"#{CGI::escape(k.to_s)}\"\r\n\r\n#{JSON.parse(v.to_json)}\r\n"
+          return "Content-Disposition: form-data; name=\"#{CGI::escape(k.to_s)}\"\r\n\r\n#{v.to_json}\r\n"
         end
       end
 
