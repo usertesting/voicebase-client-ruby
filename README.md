@@ -1,6 +1,6 @@
 # Voicebase Client Ruby
 
-This is a Ruby client to the VoiceBase API Version [1.x](http://www.voicebase.com/developers/) and [2.x](https://apis.voicebase.com). Some portions of this gem were derived from [voicebase-client-ruby](https://github.com/popuparchive/voicebase-client-ruby).
+This is a Ruby client to the VoiceBase API Version [1.x](http://www.voicebase.com/developers/), see [API documentation](https://s3.amazonaws.com/vb-developers/VB-api-devguide-v1.1.5.pdf), and [2.x](https://apis.voicebase.com). Some portions of this gem were derived from [voicebase-client-ruby](https://github.com/popuparchive/voicebase-client-ruby).
 
 ## Installation
 

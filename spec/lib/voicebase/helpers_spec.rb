@@ -15,4 +15,5 @@ describe VoiceBase::Helpers do
   it "should camelize name" do
     expect(VoiceBase::TestClass.new.camelize_name("request_status")).to eq("requestStatus")
   end
+
 end

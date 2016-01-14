@@ -13,6 +13,9 @@ require "voicebase/client"
 require "voicebase/client/token"
 require "voicebase/response"
 
+require "voicebase/json"
+require "voicebase/json/word"
+
 module VoiceBase
   class AuthenticationError < StandardError; end
   class ArgumentError < StandardError; end

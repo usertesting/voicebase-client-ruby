@@ -14,7 +14,11 @@ module VoiceBase
       end
     end
 
-    def parse_string(json_string_data)
+    def self.parse_file(json_file)
+      parse_string ::File.open(json_file, 'rb') { |f| json_file.read }
+    end
+
+    def self.parse_string(json_string_data)
       result = new
 
       json_hash_data = ::JSON.parse(json_string_data)

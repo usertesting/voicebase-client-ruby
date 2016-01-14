@@ -4,8 +4,9 @@ module VoiceBase
     attr_accessor :start_time
     attr_accessor :end_time
     attr_accessor :confidence
-    attr_writer :word
+    attr_accessor :word
     attr_accessor :error
+    attr_accessor :metadata
 
     alias_method :p, :sequence
     alias_method :p=, :sequence=
@@ -17,6 +18,8 @@ module VoiceBase
     alias_method :e=, :end_time=
     alias_method :w, :word
     alias_method :w=, :word=
+    alias_method :m, :metadata
+    alias_method :m=, :metadata=
 
     def initialize(options={})
       options.each do |k,v|
