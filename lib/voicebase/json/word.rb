@@ -28,22 +28,32 @@ module VoiceBase
     end
 
     def clone
-      clone = Word.new
+      clone = VoiceBase::JSON::Word.new
       clone.sequence   = sequence
       clone.start_time = start_time
       clone.end_time   = end_time
       clone.confidence = confidence
       clone.error      = error
       clone.word       = word
+      clone.metadata   = metadata
       clone
     end
 
+    def ==(word)
+      self.sequence   == word.sequence &&
+      self.start_time == word.start_time &&
+      self.end_time   == word.end_time &&
+      self.confidence == word.confidence &&
+      self.word       == word.word &&
+      self.metadata   == word.metadata
+    end
+
     def empty?
-      sequence.nil? && start_time.nil? && end_time.nil? && word.empty?
+      sequence.nil? && start_time.nil? && end_time.nil? && (word.nil? || word.empty?)
     end
 
     def to_json
-      {p: sequence, c: confidence, s: start_time, e: end_time, w: word}.to_json
+      {"p": sequence, "c": confidence, "s": start_time, "e": end_time, "w": word}.to_json
     end
   end
 end
