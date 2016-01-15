@@ -1,5 +1,6 @@
 module VoiceBase
   class JSON
+    include Enumerable
 
     class ParseError < StandardError; end
 
@@ -44,12 +45,45 @@ module VoiceBase
 
     attr_writer :words
 
+    def initialize(word_array = nil)
+      raise StandardError, "Must be initialized with words." if word_array.is_a?(Array) && !words.all? {|w| w.is_a?(VoiceBase::JSON::Word)}
+      @words = word_array || []
+    end
+
     def words
       @words ||= []
     end
 
     def errors
       @words.map {|w| w.error if w.error}.compact
+    end
+
+    def each(&block)
+      @words.each {|word| block.call(word)}
+    end
+
+    def gt(start_time)
+      VoiceBase::JSON.new(select {|w| w.start_time > start_time})
+    end
+
+    def gteq(start_time)
+      VoiceBase::JSON.new(select {|w| w.start_time >= start_time})
+    end
+
+    def lt(start_time)
+      VoiceBase::JSON.new(select {|w| w.start_time < start_time})
+    end
+
+    def lteq(start_time)
+      VoiceBase::JSON.new(select {|w| w.start_time <= start_time})
+    end
+
+    def to_a
+      @words
+    end
+
+    def to_json
+      map {|w| w.to_hash}.to_json
     end
   end
 end
