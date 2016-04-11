@@ -26,10 +26,15 @@ module VoiceBase
       end
 
       def upload_media(args = {}, headers = {})
-        form_args = {'media': require_media_file_or_url(args)}
+        form_args = {
+            'media': require_media_file_or_url(args),
+            'configuration': {
+                'executor': 'v2'
+            }
+        }
         if args[:external_id]
           form_args.merge!({
-            'metadata': {metadata: {external: {id: args[:external_id]}}}
+            'metadata': {metadata: {external: {id: "'#{args[:external_id]}'"}}}
           })
         end
 
