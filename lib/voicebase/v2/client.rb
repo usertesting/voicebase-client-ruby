@@ -26,23 +26,61 @@ module VoiceBase
       end
 
       def upload_media(args = {}, headers = {})
+        # form_args = {
+        #     'media': require_media_file_or_url(args),
+        #     'configuration': {
+        #         'executor': 'v2'
+        #     }
+        # }
+
+        # form_args = {
+        #     'media': require_media_file_or_url(args),
+        #     'configuration': {
+        #         'configuration': {
+        #             'executor': 'v2'
+        #         }
+        #     }
+        # }
+        vb_test_url = 'https://s3.amazonaws.com/voicebase-developer-test-content-dev/mpthreetest.mp3'
+
         form_args = {
-            'media': require_media_file_or_url(args),
-            'configuration': {
-                'executor': 'v2'
+            'media' => vb_test_url,
+            'configuration' => {
+                'configuration' => {
+                    'executor' => 'v2'
+                }
             }
         }
+
+        # if args[:external_id]
+        #   form_args.merge!({
+        #     'metadata': { metadata: { external: { id: "'#{args[:external_id]}'"}}}
+        #   })
+        # end
         if args[:external_id]
           form_args.merge!({
-            'metadata': {metadata: {external: {id: "'#{args[:external_id]}'"}}}
-          })
+                               'metadata' => {
+                                   'metadata' => {
+                                       'external' => {
+                                           'id' => "#{args[:external_id]}"
+                                       }
+                                   }
+                               }
+                           })
         end
 
-        VoiceBase::Response.new(self.class.post(
-          uri + '/media',
-          headers: multipart_headers(headers),
-          body: multipart_query(form_args)
-        ), api_version)
+        # VoiceBase::Response.new(self.class.post(
+        #   uri + '/media',
+        #   headers: multipart_headers(headers),
+        #   body: multipart_query(form_args)
+        # ), api_version)
+        response = self.class.post(
+            uri + '/media',
+            headers: multipart_headers(headers),
+            body: multipart_query(form_args)
+        )
+
+        VoiceBase::Response.new(response, api_version)
       end
 
       def get_media(args = {}, headers = {})
@@ -54,21 +92,27 @@ module VoiceBase
         else
           raise ArgumentError, "Missing argument :media_url or :media_file"
         end
+        if args[:external_id]
+          uri + "/media?externalID=#{args[:external_id]}"
+        else
+          raise ArgumentError, "Missing argument :external_id"
+        end
+
         VoiceBase::Response.new(self.class.get(
           url, headers: default_headers(headers)
         ), api_version)
       end
 
       def get_transcript(args = {}, headers = {})
-        raise ArgumentError, "Missing argument :media_id" unless args[:media_id]
-        url = if args[:transcript_id]
-          uri + "/media/#{args[:media_id]}/transcripts/#{args[:transcript_id]}"
-        else
-          uri + "/media/#{args[:media_id]}/transcripts/latest"
-        end
-        VoiceBase::Response.new(self.class.get(
-          url, headers: default_headers(headers)
-        ), api_version)
+        url = uri + "/media/?externalId=#{args[:external_id]}"
+        # VoiceBase::Response.new(self.class.get(
+        #   url, headers: default_headers(headers)
+        # ), api_version)
+        response = self.class.get(
+            url,
+            headers: default_headers(headers)
+        )
+        VoiceBase::Response.new(response, api_version)
       end
 
       def get_media_progress(args = {}, headers = {})
@@ -77,6 +121,19 @@ module VoiceBase
           uri + "/media/#{args[:media_id]}/progress",
           headers: default_headers(headers)
         ), api_version)
+      end
+
+      def delete_file(args = {}, headers = {})
+
+        # used like this
+        # def delete_file
+        #  @response = client.delete_file({
+        #  external_id: ingest.id
+        #  }) if ingest
+        # end
+
+        #TODO do something here to tell VoiceBase to delete the data
+
       end
 
       private
