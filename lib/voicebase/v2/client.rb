@@ -26,25 +26,8 @@ module VoiceBase
       end
 
       def upload_media(args = {}, headers = {})
-        # form_args = {
-        #     'media': require_media_file_or_url(args),
-        #     'configuration': {
-        #         'executor': 'v2'
-        #     }
-        # }
-
-        # form_args = {
-        #     'media': require_media_file_or_url(args),
-        #     'configuration': {
-        #         'configuration': {
-        #             'executor': 'v2'
-        #         }
-        #     }
-        # }
-        vb_test_url = 'https://s3.amazonaws.com/voicebase-developer-test-content-dev/mpthreetest.mp3'
-
         form_args = {
-            'media' => vb_test_url,
+            'media' => require_media_file_or_url(args),
             'configuration' => {
                 'configuration' => {
                     'executor' => 'v2'
@@ -52,11 +35,6 @@ module VoiceBase
             }
         }
 
-        # if args[:external_id]
-        #   form_args.merge!({
-        #     'metadata': { metadata: { external: { id: "'#{args[:external_id]}'"}}}
-        #   })
-        # end
         if args[:external_id]
           form_args.merge!({
                                'metadata' => {
@@ -69,11 +47,6 @@ module VoiceBase
                            })
         end
 
-        # VoiceBase::Response.new(self.class.post(
-        #   uri + '/media',
-        #   headers: multipart_headers(headers),
-        #   body: multipart_query(form_args)
-        # ), api_version)
         response = self.class.post(
             uri + '/media',
             headers: multipart_headers(headers),
@@ -104,14 +77,18 @@ module VoiceBase
       end
 
       def get_transcript(args = {}, headers = {})
+
+        #todo as of 4/12/16 the VoiceBase V2 API doesn't support retrieving plain text transcripts using
+        # external IDs, so a different method will be needed to get them. Namely, save the VoiceBase
+        # media ID from the JSON reqeust response, and use it to make another request for the text.
+
         url = uri + "/media/?externalId=#{args[:external_id]}"
-        # VoiceBase::Response.new(self.class.get(
-        #   url, headers: default_headers(headers)
-        # ), api_version)
+
         response = self.class.get(
             url,
             headers: default_headers(headers)
         )
+
         VoiceBase::Response.new(response, api_version)
       end
 
@@ -125,14 +102,7 @@ module VoiceBase
 
       def delete_file(args = {}, headers = {})
 
-        # used like this
-        # def delete_file
-        #  @response = client.delete_file({
-        #  external_id: ingest.id
-        #  }) if ingest
-        # end
-
-        #TODO do something here to tell VoiceBase to delete the data
+        #todo https://apis.voicebase.com/console/#/documentation#media_mediaId
 
       end
 
