@@ -86,10 +86,12 @@ module VoiceBase
 
       def get_transcript(args = {}, headers = {})
         url = if args[:media_id]
-                uri + "/media/#{args[:media_id]}"
+                uri + "/media/#{args[:media_id]}/transcripts/latest"
               else
                 raise ArgumentError, "Missing argument :media_id"
               end
+
+        headers.merge!({ 'Accept' => 'text/plain' }) if args[:format] == "txt"
 
         response = self.class.get(
             url,
