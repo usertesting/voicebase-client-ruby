@@ -26,8 +26,14 @@ module VoiceBase
       end
 
       def upload_media(args = {}, headers = {})
+
+        #media_url = require_media_file_or_url(args)
+
+        # test URL from VoiceBase
+        media_url = 'https://s3.amazonaws.com/voicebase-developer-test-content-dev/mpthreetest.mp3'
+
         form_args = {
-            'media' => require_media_file_or_url(args),
+            'media' => media_url,
             'configuration' => {
                 'configuration' => {
                     'executor' => 'v2'
@@ -35,6 +41,7 @@ module VoiceBase
             }
         }
 
+        # external ID is only partially supported in the V2 API (can't get plain text transcripts or delete media)
         if args[:external_id]
           form_args.merge!({
                                'metadata' => {
@@ -56,6 +63,7 @@ module VoiceBase
         VoiceBase::Response.new(response, api_version)
       end
 
+      # is this used?
       def get_media(args = {}, headers = {})
         raise ArgumentError, "Missing argument :media_id" unless args[:media_id]
         url = if args[:media_id]
@@ -77,12 +85,11 @@ module VoiceBase
       end
 
       def get_transcript(args = {}, headers = {})
-
-        #todo as of 4/12/16 the VoiceBase V2 API doesn't support retrieving plain text transcripts using
-        # external IDs, so a different method will be needed to get them. Namely, save the VoiceBase
-        # media ID from the JSON reqeust response, and use it to make another request for the text.
-
-        url = uri + "/media/?externalId=#{args[:external_id]}"
+        url = if args[:media_id]
+                uri + "/media/#{args[:media_id]}"
+              else
+                raise ArgumentError, "Missing argument :media_id"
+              end
 
         response = self.class.get(
             url,
@@ -92,6 +99,7 @@ module VoiceBase
         VoiceBase::Response.new(response, api_version)
       end
 
+      # is this used?
       def get_media_progress(args = {}, headers = {})
         raise ArgumentError, "Missing argument :media_id" unless args[:media_id]
         VoiceBase::Response.new(self.class.get(
@@ -101,9 +109,19 @@ module VoiceBase
       end
 
       def delete_file(args = {}, headers = {})
+        url = if args[:media_id]
+                uri + "/media/#{args[:media_id]}"
+              else
+                raise ArgumentError, "Missing argument :media_id"
+              end
 
-        #todo https://apis.voicebase.com/console/#/documentation#media_mediaId
+        response = self.class.delete(
+            url,
+            headers: default_headers(headers)
+        )
 
+
+        VoiceBase::Response.new(response, api_version)
       end
 
       private

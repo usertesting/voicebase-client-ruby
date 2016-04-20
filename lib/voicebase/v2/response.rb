@@ -13,16 +13,28 @@ module VoiceBase
         ok?
       end
 
+      def media_id
+        response['mediaId']
+      end
+
       def transcript_ready?
-        http_response.parsed_response['media'].first['status'].casecmp(TRANSCRIPT_READY) == 0
+        response['media']['status'].casecmp(TRANSCRIPT_READY) == 0
       end
 
       #todo double check the format for plain text transcriptions, but it's probably just text only
+
+      #todo need to split into JSON and plain text retrieval methods
+
       def transcript
-        http_response.parsed_response['media'].first['transcripts']['latest']['words']
+        # this retrieves the JSON transcript only
+        response['media']['transcripts']['latest']['words']
       end
 
       private
+
+      def response
+        http_response.parsed_response
+      end
 
     end
   end
