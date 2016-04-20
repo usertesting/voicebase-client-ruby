@@ -113,7 +113,7 @@ module VoiceBase
             headers: default_headers(headers)
         )
 
-        VoiceBase::Response.new(response, api_version)
+        response.parsed_response
       end
 
       def get_transcript(args = {}, headers = {})
