@@ -27,10 +27,10 @@ module VoiceBase
 
       def upload_media(args = {}, headers = {})
 
-        #media_url = require_media_file_or_url(args)
+        media_url = require_media_file_or_url(args)
 
         # test URL from VoiceBase
-        media_url = 'https://s3.amazonaws.com/voicebase-developer-test-content-dev/mpthreetest.mp3'
+        # media_url = 'https://s3.amazonaws.com/voicebase-developer-test-content-dev/mpthreetest.mp3'
 
         form_args = {
             'media' => media_url,
