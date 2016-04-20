@@ -84,14 +84,12 @@ module VoiceBase
         ), api_version)
       end
 
-      def get_transcript(args = {}, headers = {})
+      def get_json_transcript(args, headers)
         url = if args[:media_id]
-                uri + "/media/#{args[:media_id]}/transcripts/latest"
+                uri + "/media/#{args[:media_id]}"
               else
                 raise ArgumentError, "Missing argument :media_id"
               end
-
-        headers.merge!({ 'Accept' => 'text/plain' }) if args[:format] == "txt"
 
         response = self.class.get(
             url,
@@ -99,6 +97,31 @@ module VoiceBase
         )
 
         VoiceBase::Response.new(response, api_version)
+      end
+
+      def get_text_transcript(args, headers)
+        url = if args[:media_id]
+                uri + "/media/#{args[:media_id]}/transcripts/latest"
+              else
+                raise ArgumentError, "Missing argument :media_id"
+              end
+
+        headers.merge!({ 'Accept' => 'text/plain' })
+
+        response = self.class.get(
+            url,
+            headers: default_headers(headers)
+        )
+
+        VoiceBase::Response.new(response, api_version)
+      end
+
+      def get_transcript(args = {}, headers = {})
+        if args[:format] == "txt"
+          get_text_transcript(args, headers)
+        else
+          get_json_transcript(args, headers)
+        end
       end
 
       # is this used?
