@@ -2,6 +2,6 @@ require 'spec_helper'
 
 describe VoiceBase do
   it "should have a version" do
-    expect(VoiceBase.version).to eq("1.0.11")
+    expect(VoiceBase.version).to eq("1.0.12")
   end
 end
