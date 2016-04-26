@@ -63,7 +63,7 @@ module VoiceBase
         VoiceBase::Response.new(response, api_version)
       end
 
-      # is this used?
+      # I presume this method exists for parity with the V1 API however it is not used by the Orders app
       def get_media(args = {}, headers = {})
         raise ArgumentError, "Missing argument :media_id" unless args[:media_id]
         url = if args[:media_id]
