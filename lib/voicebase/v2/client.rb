@@ -29,9 +29,6 @@ module VoiceBase
 
         media_url = require_media_file_or_url(args)
 
-        # test URL from VoiceBase
-        # media_url = 'https://s3.amazonaws.com/voicebase-developer-test-content-dev/mpthreetest.mp3'
-
         form_args = {
             'media' => media_url,
             'configuration' => {
@@ -144,7 +141,6 @@ module VoiceBase
             url,
             headers: default_headers(headers)
         )
-
 
         VoiceBase::Response.new(response, api_version)
       end

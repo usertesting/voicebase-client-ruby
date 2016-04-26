@@ -2,7 +2,7 @@ module VoiceBase
   module V2
     module Response
 
-      TRANSCRIPT_READY = "finished".freeze
+      TRANSCRIPT_READY_STATUS = "finished".freeze
 
       def success?
 
@@ -18,12 +18,8 @@ module VoiceBase
       end
 
       def transcript_ready?
-        response['media']['status'].casecmp(TRANSCRIPT_READY) == 0
+        response['media']['status'].casecmp(TRANSCRIPT_READY_STATUS) == 0
       end
-
-      #todo double check the format for plain text transcriptions, but it's probably just text only
-
-      #todo need to split into JSON and plain text retrieval methods
 
       def transcript
         # this retrieves the JSON transcript only
