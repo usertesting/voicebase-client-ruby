@@ -14,21 +14,22 @@ module VoiceBase
       end
 
       def media_id
-        response['mediaId']
+        voicebase_response['mediaId']
       end
 
       def transcript_ready?
-        response['media']['status'].casecmp(TRANSCRIPT_READY_STATUS) == 0
+        voicebase_response['media']['status'].casecmp(TRANSCRIPT_READY_STATUS) == 0
       end
 
       def transcript
         # this retrieves the JSON transcript only
-        response['media']['transcripts']['latest']['words']
+        # the plain text transcript is a plain text non-JSON response
+        voicebase_response['media']['transcripts']['latest']['words']
       end
 
       private
 
-      def response
+      def voicebase_response
         http_response.parsed_response
       end
 
