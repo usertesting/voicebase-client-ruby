@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.summary       = %q{Ruby client for VoiceBase API Version 1.x and 2.x.}
   spec.description   = %q{Ruby client for VoiceBase API Version 1.x and 2.x that will make both API versions available at the same time.}
   spec.homepage      = "https://github.com/usertesting/voicebase-client-ruby"
-  spec.license       = "APACHE"
+  spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.bindir        = "exe"
