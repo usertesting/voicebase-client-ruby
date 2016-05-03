@@ -2,13 +2,37 @@ module VoiceBase
   module V2
     module Response
 
+      TRANSCRIPT_READY_STATUS = "finished".freeze
+
       def success?
 
-        #todo the V2 API response does not include a "requestStatus" field
-        # need to determine Juergen's intent here.
+        # for the V1 API this indicates both a successful HTTP status code and a values of "SUCCESS" in the
+        # returned JSON. with V2, there is no "SUCCESS" value. The combined use was split, adding
+        # #transcript_ready? to both interfaces.
 
-        ok? #&& request_status == "SUCCESS"
+        ok?
       end
+
+      def media_id
+        voicebase_response['mediaId']
+      end
+
+      def transcript_ready?
+        voicebase_response['media']['status'].casecmp(TRANSCRIPT_READY_STATUS) == 0
+      end
+
+      def transcript
+        # this retrieves the JSON transcript only
+        # the plain text transcript is a plain text non-JSON response
+        voicebase_response['media']['transcripts']['latest']['words']
+      end
+
+      private
+
+      def voicebase_response
+        http_response.parsed_response
+      end
+
     end
   end
 end

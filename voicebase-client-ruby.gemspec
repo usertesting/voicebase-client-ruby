@@ -6,8 +6,8 @@ require 'voicebase/version'
 Gem::Specification.new do |spec|
   spec.name          = "voicebase-client-ruby"
   spec.version       = VoiceBase::version
-  spec.authors       = ["Juergen Fesslmeier"]
-  spec.email         = ["jfesslmeier@usertesting.com"]
+  spec.authors       = ["Jerry Hogsett"]
+  spec.email         = ["jerry@usertesting.com"]
 
   spec.summary       = %q{Ruby client for VoiceBase API Version 1.x and 2.x.}
   spec.description   = %q{Ruby client for VoiceBase API Version 1.x and 2.x that will make both API versions available at the same time.}
@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.11"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency "timecop", "~> 0.8"
 
   spec.add_dependency "httparty"
   spec.add_dependency "activesupport"

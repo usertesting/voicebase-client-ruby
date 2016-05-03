@@ -15,7 +15,7 @@ module VoiceBase
     end
 
     def ok?
-      code && code >= 200 && code < 300
+      http_response.code && http_response.code >= 200 && http_response.code < 300
     end
 
     # E.g.
