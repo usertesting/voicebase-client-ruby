@@ -26,7 +26,6 @@ module VoiceBase
       end
 
       def upload_media(args = {}, headers = {})
-
         media_url = require_media_file_or_url(args)
 
         form_args = {
@@ -60,7 +59,7 @@ module VoiceBase
         VoiceBase::Response.new(response, api_version)
       end
 
-      # I presume this method exists for parity with the V1 API however it is not used by the Orders app
+      # I presume this method exists for parity with the V1 API however we are not using it
       def get_media(args = {}, headers = {})
         raise ArgumentError, "Missing argument :media_id" unless args[:media_id]
         url = if args[:media_id]
@@ -121,7 +120,7 @@ module VoiceBase
         end
       end
 
-      # is this used?
+      # I presume this method exists for parity with the V1 API however we are not using it
       def get_media_progress(args = {}, headers = {})
         raise ArgumentError, "Missing argument :media_id" unless args[:media_id]
         VoiceBase::Response.new(self.class.get(
