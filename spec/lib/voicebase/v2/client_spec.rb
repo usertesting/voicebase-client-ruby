@@ -1,24 +1,29 @@
 require 'spec_helper'
 
 describe VoiceBase::V2::Client do
+
+  let(:voicebase_options) {{
+      api_version: "2",
+      auth_key: "key",
+      auth_secret: "secret",
+      user_agent: "testing"
+  }}
+  let(:client) { VoiceBase::Client.new(voicebase_options)}
+
+  let(:token) { double("token", try: "asdf") }
+  let(:token_array) { double("token array", try: token) }
+  let(:tokens) { double("tokens", try: token_array) }
+  let(:parsed_response) {{
+      'status_message' => nil,
+      'tokens' => tokens
+  }}
+  let(:http_response) { double("http response",  parsed_response: parsed_response) }
+
+  before do
+
+  end
   context "#authenticate!" do
     it "makes an API call to VoiceBase with the key & secret and processes a returned token" do
-      voicebase_options = {
-          api_version: "2",
-          auth_key: "key",
-          auth_secret: "secret",
-          user_agent: "testing"
-      }
-      client = VoiceBase::Client.new(voicebase_options)
-
-      token = double("token", try: "asdf")
-      token_array = double("token array", try: token)
-      tokens = double("tokens", try: token_array)
-      parsed_response = {
-          'status_message' => nil,
-          'tokens' => tokens
-      }
-      http_response = double("http response",  parsed_response: parsed_response)
 
       url = "https://apis.voicebase.com/v2-beta/access/users/admin/tokens"
       httparty_options = {
@@ -34,20 +39,42 @@ describe VoiceBase::V2::Client do
               }
       }
 
-      expect(VoiceBase::Client).to receive(:get).with(url, httparty_options).and_return(http_response)
-      expect(VoiceBase::Client::Token).to receive(:new).with(token)
+      allow(VoiceBase::Client::Token).to receive(:new).with(token)
 
+      expect(VoiceBase::Client).to receive(:get).with(url, httparty_options).and_return(http_response)
       client.authenticate!
     end
   end
 
+  context "#upload_media" do
+    let(:auth_token) { "My-Auth-Token" }
 
+    before do
+      client.token = double("voicebase token", token: auth_token)
+    end
 
+    it "makes an API call to VoiceBase to post the media file" do
+      url = "https://apis.voicebase.com/v2-beta/media"
 
+      headers = {
+          "Authorization" => "Bearer My-Auth-Token",
+          "User-Agent" => "testing",
+          "Content-Type" => "multipart/form-data; boundary=0123456789ABLEWASIEREISAWELBA9876543210"
+      }
+      body = "--0123456789ABLEWASIEREISAWELBA9876543210\r\nContent-Disposition: form-data; name=\"media\"\r\n\r\nhttp://s3.com/video.mp4\r\n--0123456789ABLEWASIEREISAWELBA9876543210\r\nContent-Disposition: form-data; name=\"configuration\"\r\n\r\n{\"configuration\":{\"executor\":\"v2\"}}\r\n--0123456789ABLEWASIEREISAWELBA9876543210--"
+      httparty_options = {
+          headers: headers,
+          body: body
+      }
 
+      media_url = "http://s3.com/video.mp4"
+      allow(client).to receive(:authenticate!)
+      allow(client).to receive(:require_media_file_or_url).and_return(media_url)
 
-
-
+      expect(VoiceBase::Client).to receive(:post).with(url, httparty_options).and_return(http_response)
+      client.upload_media({}, {})
+    end
+  end
 
 
 

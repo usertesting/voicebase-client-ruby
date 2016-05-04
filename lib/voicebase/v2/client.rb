@@ -147,10 +147,16 @@ module VoiceBase
 
       private
 
+      def blank?(value)
+        value.nil? || value.empty?
+      end
+
       def default_headers(headers = {})
         authenticate! unless token
-        headers = {'Authorization' => "Bearer #{token.token}",
-          'User-Agent' => user_agent}.reject {|k, v| v.blank?}.merge(headers)
+        headers = {
+            'Authorization' => "Bearer #{token.token}",
+            'User-Agent' => user_agent
+        }.reject { |k, v| blank?(v) }.merge(headers)
         puts "> headers\n> #{headers}" if debug
         headers
       end
