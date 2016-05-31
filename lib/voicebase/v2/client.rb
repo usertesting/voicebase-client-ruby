@@ -81,11 +81,8 @@ module VoiceBase
       end
 
       def get_json_transcript(args, headers)
-        url = if args[:media_id]
-                uri + "/media/#{args[:media_id]}"
-              else
-                raise ArgumentError, "Missing argument :media_id"
-              end
+        raise ArgumentError, "Missing argument :media_id" unless args[:media_id]
+        url = uri + "/media/#{args[:media_id]}"
 
         response = self.class.get(
             url,
@@ -96,12 +93,9 @@ module VoiceBase
       end
 
       def get_text_transcript(args, headers)
-        url = if args[:media_id]
-                uri + "/media/#{args[:media_id]}/transcripts/latest"
-              else
-                raise ArgumentError, "Missing argument :media_id"
-              end
-
+        raise ArgumentError, "Missing argument :media_id" unless args[:media_id]
+        url = uri + "/media/#{args[:media_id]}/transcripts/latest"
+        
         headers.merge!({ 'Accept' => 'text/plain' })
 
         response = self.class.get(
@@ -130,11 +124,8 @@ module VoiceBase
       end
 
       def delete_file(args = {}, headers = {})
-        url = if args[:media_id]
-                uri + "/media/#{args[:media_id]}"
-              else
-                raise ArgumentError, "Missing argument :media_id"
-              end
+        raise ArgumentError, "Missing argument :media_id" unless args[:media_id]
+        url = uri + "/media/#{args[:media_id]}"
 
         response = self.class.delete(
             url,

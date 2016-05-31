@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe VoiceBase::V1::Response do
+describe VoiceBase::V2::Response do
   let(:v2_api) { '2.0' }
 
   context "methods dependent on returned HTTP response" do
@@ -57,6 +57,28 @@ describe VoiceBase::V1::Response do
       it "gets the transcript" do
         response = VoiceBase::Response.new(http_response, v2_api)
         expect(response.transcript).to eq(transcipt)
+      end
+    end
+    
+    context "#keywords" do
+      let(:keywords) { 'keywords' }
+      let(:parsed_response) { { 'media' => { 'transcripts' => { 'latest' => { 'keywords' => keywords }}}}}
+      let(:http_response) { double("http response", code: 200, parsed_response: parsed_response) }
+
+      it "gets the keywords" do
+        response = VoiceBase::Response.new(http_response, v2_api)
+        expect(response.keywords).to eq(keywords)
+      end
+    end
+    
+    context "#topics" do
+      let(:topics) { 'topics' }
+      let(:parsed_response) { { 'media' => { 'transcripts' => { 'latest' => { 'topics' => topics }}}}}
+      let(:http_response) { double("http response", code: 200, parsed_response: parsed_response) }
+
+      it "gets the transcript" do
+        response = VoiceBase::Response.new(http_response, v2_api)
+        expect(response.topics).to eq(topics)
       end
     end
   end

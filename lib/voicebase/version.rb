@@ -1,5 +1,5 @@
 module VoiceBase
-  VERSION = "1.0.17"
+  VERSION = "1.1.0"
 
   def self.version; VERSION; end
 end
