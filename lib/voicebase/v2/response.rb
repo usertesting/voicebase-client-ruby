@@ -28,11 +28,15 @@ module VoiceBase
       end
       
       def keywords
-        voicebase_response['media']['transcripts']['latest']['keywords']
+        voicebase_response['media']['keywords']['latest']['words']
+      end
+      
+      def keyword_groups
+        voicebase_response['media']['keywords']['latest']['groups']
       end
       
       def topics
-        voicebase_response['media']['transcripts']['latest']['topics']
+        voicebase_response['media']['topics']['latest']['topics']
       end
 
       private
