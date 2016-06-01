@@ -62,7 +62,7 @@ describe VoiceBase::V2::Response do
     
     context "#keywords" do
       let(:keywords) { 'keywords' }
-      let(:parsed_response) { { 'media' => { 'transcripts' => { 'latest' => { 'keywords' => keywords }}}}}
+      let(:parsed_response) { { 'media' => { 'keywords' => { 'latest' => { 'words' => keywords }}}}}
       let(:http_response) { double("http response", code: 200, parsed_response: parsed_response) }
 
       it "gets the keywords" do
@@ -71,9 +71,20 @@ describe VoiceBase::V2::Response do
       end
     end
     
+    context "#keyword_groups" do
+      let(:keyword_groups) { 'groups' }
+      let(:parsed_response) { { 'media' => { 'keywords' => { 'latest' => { 'groups' => keyword_groups }}}}}
+      let(:http_response) { double("http response", code: 200, parsed_response: parsed_response) }
+
+      it "gets the keywords" do
+        response = VoiceBase::Response.new(http_response, v2_api)
+        expect(response.keyword_groups).to eq(keyword_groups)
+      end
+    end
+    
     context "#topics" do
       let(:topics) { 'topics' }
-      let(:parsed_response) { { 'media' => { 'transcripts' => { 'latest' => { 'topics' => topics }}}}}
+      let(:parsed_response) { { 'media' => { 'topics' => { 'latest' => { 'topics' => topics }}}}}
       let(:http_response) { double("http response", code: 200, parsed_response: parsed_response) }
 
       it "gets the transcript" do
