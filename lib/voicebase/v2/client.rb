@@ -27,35 +27,14 @@ module VoiceBase
 
       def upload_media(args = {}, headers = {})
         media_url = require_media_file_or_url(args)
-
-        form_args = {
-            'media' => media_url,
-            'configuration' => {
-                'configuration' => {
-                    'executor' => 'v2'
-                }
-            }
-        }
-
-        # external ID is only partially supported in the V2 API (can't get plain text transcripts or delete media)
-        if args[:external_id]
-          form_args.merge!({
-                               'metadata' => {
-                                   'metadata' => {
-                                       'external' => {
-                                           'id' => "#{args[:external_id]}"
-                                       }
-                                   }
-                               }
-                           })
-        end
+        form_args = form_args(media_url, args[:language]) # language codes: en-US (default), en-UK, en-AU
+        form_args.merge! metadata(args[:external_id]) if args[:external_id]
 
         response = self.class.post(
             uri + '/media',
             headers: multipart_headers(headers),
             body: multipart_query(form_args)
         )
-
         VoiceBase::Response.new(response, api_version)
       end
 
@@ -136,6 +115,31 @@ module VoiceBase
       end
 
       private
+
+      def form_args(media_url, language = nil)
+        args = {
+          'media' => media_url,
+          'configuration' => {
+            'configuration' => {
+              'executor' => 'v2'
+            }
+          }
+        }
+        args['configuration']['configuration'].merge!({'language' => language}) if language
+        args
+      end
+
+      def metadata(external_id)
+        {
+          'metadata' => {
+            'metadata' => {
+              'external' => {
+                'id' => external_id
+              }
+            }
+          }
+        }
+      end
 
       def blank?(value)
         value.nil? || value.empty?

@@ -66,16 +66,26 @@ describe VoiceBase::V2::Client do
     end
 
     context "#upload_media" do
-      it "makes an API call to VoiceBase to post the media file" do
-        url = "https://apis.voicebase.com/v2-beta/media"
+      let(:url) { "https://apis.voicebase.com/v2-beta/media" }
+      let(:media_url) { "http://s3.com/video.mp4" }
+
+      before do
         @request_headers.merge!({"Content-Type" => "multipart/form-data; boundary=0123456789ABLEWASIEREISAWELBA9876543210"})
-        media_url = "http://s3.com/video.mp4"
         allow(client).to receive(:require_media_file_or_url).and_return(media_url)
+      end
+
+      it "makes an API call to VoiceBase to post the media file" do
         body = "--0123456789ABLEWASIEREISAWELBA9876543210\r\nContent-Disposition: form-data; name=\"media\"\r\n\r\nhttp://s3.com/video.mp4\r\n--0123456789ABLEWASIEREISAWELBA9876543210\r\nContent-Disposition: form-data; name=\"configuration\"\r\n\r\n{\"configuration\":{\"executor\":\"v2\"}}\r\n--0123456789ABLEWASIEREISAWELBA9876543210--"
         httparty_options.merge!({body: body})
-
         expect(VoiceBase::Client).to receive(:post).with(url, httparty_options).and_return(http_response)
         client.upload_media({}, {})
+      end
+
+      it "adds the engine language code if specified" do
+        body = "--0123456789ABLEWASIEREISAWELBA9876543210\r\nContent-Disposition: form-data; name=\"media\"\r\n\r\nhttp://s3.com/video.mp4\r\n--0123456789ABLEWASIEREISAWELBA9876543210\r\nContent-Disposition: form-data; name=\"configuration\"\r\n\r\n{\"configuration\":{\"executor\":\"v2\",\"language\":\"en-UK\"}}\r\n--0123456789ABLEWASIEREISAWELBA9876543210--"
+        httparty_options.merge!({body: body})
+        expect(VoiceBase::Client).to receive(:post).with(url, httparty_options).and_return(http_response)
+        client.upload_media({language: 'en-UK'}, {})
       end
     end
 
