@@ -134,7 +134,7 @@ module VoiceBase
           'metadata' => {
             'metadata' => {
               'external' => {
-                'id' => external_id
+                'id' => "#{external_id}"
               }
             }
           }
