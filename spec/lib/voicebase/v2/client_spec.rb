@@ -9,9 +9,8 @@ describe VoiceBase::V2::Client do
   } }
   let(:client) { VoiceBase::Client.new(voicebase_options) }
 
-  let(:token) { double("token", try: "asdf") }
-  let(:token_array) { double("token array", try: token) }
-  let(:tokens) { double("tokens", try: token_array) }
+  let(:token) { "asdf" }
+  let(:tokens) { [ { "token" => token } ] }
   let(:parsed_response) { {
       'status_message' => nil,
       'tokens' => tokens
@@ -40,6 +39,7 @@ describe VoiceBase::V2::Client do
                     "Accept" => "application/json"
                 }
         }
+
         allow(VoiceBase::Client::Token).to receive(:new).with(token)
 
         expect(VoiceBase::Client).to receive(:get).with(url, httparty_options).and_return(http_response)

@@ -53,11 +53,11 @@ module VoiceBase
     end
 
     def to_hash
-      {"p": sequence, "c": confidence, "s": start_time, "e": end_time, "w": word}
+      { "p" => sequence, "c" => confidence, "s" => start_time, "e" => end_time, "w" => word }
     end
 
     def to_json
-      {"p": sequence, "c": confidence, "s": start_time, "e": end_time, "w": word}.to_json
+      { "p" => sequence, "c" => confidence, "s" => start_time, "e" => end_time, "w" => word }.to_json
     end
   end
 end

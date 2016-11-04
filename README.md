@@ -1,10 +1,12 @@
 # Voicebase Client Ruby
 
+[![Build Status](https://travis-ci.org/usertesting/voicebase-client-ruby.svg?branch=master)](https://travis-ci.org/usertesting/voicebase-client-ruby)
+
 This is a Ruby client to the VoiceBase API Version [1.x](http://www.voicebase.com/developers/), see [API documentation](https://s3.amazonaws.com/vb-developers/VB-api-devguide-v1.1.5.pdf), and [2.x](https://apis.voicebase.com). Some portions of this gem were derived from [voicebase-client-ruby](https://github.com/popuparchive/voicebase-client-ruby).
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Add this line to your application's `Gemfile`:
 
 ```ruby
 gem 'voicebase-client-ruby', github: "usertesting/voicebase-client-ruby"
@@ -13,6 +15,13 @@ gem 'voicebase-client-ruby', github: "usertesting/voicebase-client-ruby"
 And then execute:
 
     $ bundle
+
+This gem is compatible with Ruby versions:
+
+* 2.0.x
+* 2.1.x
+* 2.2.x
+* 2.3.x
 
 ## Usage
 
@@ -38,11 +47,10 @@ client.upload_media({
   error_callback: "http://my.example.com/error"
 })
 
-response = get_transcript(external_id: 'abcd1234' format: "json")
+response = client.get_transcript(external_id: 'abcd1234' format: "json")
 if response.success?
   transcript_json = JSON.parse(response.transcript)
 end
-
 ```
 
 For VoiceBase API V2.x:
@@ -51,7 +59,7 @@ For VoiceBase API V2.x:
 require 'voicebase'
 
 client = VoiceBase::Client.new({
-  api_version: "2.0.beta",
+  api_version: "2.0",
   auth_key: "my-voicebase-key",
   auth_secret: "my-voicebase-secret",
 })
@@ -83,11 +91,10 @@ client.get_transcript({
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. 
+To install this gem onto your local machine, run `bundle exec rake install`.
 
 To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/usertesting/voicebase-client-ruby.
-

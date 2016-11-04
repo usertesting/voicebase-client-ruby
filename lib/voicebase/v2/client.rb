@@ -20,7 +20,7 @@ module VoiceBase
               'Accept'       => 'application/json'
             }
           ), api_version)
-        @token = VoiceBase::Client::Token.new(response.tokens.try(:first).try(:[], 'token'))
+        @token = VoiceBase::Client::Token.new(response.tokens.any? && response.tokens.first.fetch("token"))
       rescue NoMethodError => ex
         raise VoiceBase::AuthenticationError, response.status_message
       end
