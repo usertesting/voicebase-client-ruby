@@ -1,7 +1,8 @@
-require 'json'
-require 'uri'
-require 'httparty'
-require 'active_support/core_ext/module'
+require "json"
+require "uri"
+require "httparty"
+require "httmultiparty"
+require "active_support/core_ext/module"
 
 require "voicebase/version"
 require "voicebase/helpers"
