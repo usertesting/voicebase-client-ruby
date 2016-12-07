@@ -26,4 +26,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "httparty"
   spec.add_dependency "activesupport", "~> 4"
+  spec.add_dependency "httmultiparty"
 end
