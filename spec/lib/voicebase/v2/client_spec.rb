@@ -20,7 +20,7 @@ describe VoiceBase::V2::Client do
   let(:auth_token) { "My-Auth-Token" }
 
   before do
-    client.token = double("voicebase token", token: auth_token)
+    client.token = double("voicebase token", token: auth_token, to_s: auth_token)
   end
 
   context "pre-authentication" do
