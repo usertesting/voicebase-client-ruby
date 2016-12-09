@@ -22,6 +22,7 @@ module VoiceBase
           ), api_version)
         @token = VoiceBase::Client::Token.new(response.tokens.any? && response.tokens.first.fetch("token"))
       rescue NoMethodError => ex
+        byebug
         raise VoiceBase::AuthenticationError, response.status_message
       end
 
@@ -148,8 +149,9 @@ module VoiceBase
       def default_headers(headers = {})
         authenticate! unless token
         headers = {
-            'Authorization' => "Bearer #{token.token}",
-            'User-Agent' => user_agent
+          'User-Agent' => user_agent,
+        }.tap {|o|
+          o['Authorization'] = "Bearer #{token}" if token
         }.reject { |k, v| blank?(v) }.merge(headers)
         puts "> headers\n> #{headers}" if debug
         headers

@@ -1,7 +1,5 @@
 module VoiceBase
   class Client
-    include HTTParty
-
     attr_accessor :args
     attr_accessor :api_host
     attr_accessor :api_endpoint
@@ -27,8 +25,10 @@ module VoiceBase
       @locale              = args[:locale] || 'en'  # US English
 
       if @api_version.to_f < 2.0
+        self.class.include(HTTMultiParty)
         self.extend(VoiceBase::V1::Client)
       else
+        self.class.include(HTTParty)
         self.extend(VoiceBase::V2::Client)
       end
     end

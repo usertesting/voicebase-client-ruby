@@ -30,6 +30,14 @@ describe VoiceBase::V1::Client do
   end
 
   describe VoiceBase::Client::Token do
+    let(:timeout) { 10 }
+    let(:initial_time) { Time.local(2016, 5, 2, 16, 22, 0) }
+    let(:expired_time) { Time.local(2016, 5, 2, 16, 22, timeout + 1) }
+
+    before do
+      Timecop.freeze(initial_time)
+    end
+
     it "should create token instance" do
       token = VoiceBase::Client::Token.new("abcd-token", 1440)
       expect(token.token).to eq("abcd-token")
@@ -43,8 +51,8 @@ describe VoiceBase::V1::Client do
     end
 
     it "should be expired?" do
-      token = VoiceBase::Client::Token.new("expired-token", 0)
-      sleep 0.2
+      token = VoiceBase::Client::Token.new("expired-token", timeout)
+      Timecop.travel(expired_time)
       expect(token.expired?).to eq(true)
     end
   end

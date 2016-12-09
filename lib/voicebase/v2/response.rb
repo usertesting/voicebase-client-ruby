@@ -26,15 +26,15 @@ module VoiceBase
         # the plain text transcript is a plain text non-JSON response
         voicebase_response['media']['transcripts']['latest']['words']
       end
-      
+
       def keywords
         voicebase_response['media']['keywords']['latest']['words']
       end
-      
+
       def keyword_groups
         voicebase_response['media']['keywords']['latest']['groups']
       end
-      
+
       def topics
         voicebase_response['media']['topics']['latest']['topics']
       end

@@ -24,5 +24,9 @@ describe VoiceBase::Client::Token do
       Timecop.travel(expired_time)
       expect(token.expired?).to be_truthy
     end
+
+    it "delegates token method to_s" do
+      expect(VoiceBase::Client::Token.new("foobar").to_s).to eq("foobar")
+    end
   end
 end
