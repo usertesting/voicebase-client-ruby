@@ -12,5 +12,9 @@ module VoiceBase
     def expired?
       Time.now > created_at + (timeout / 1000.to_f)
     end
+
+    def to_s
+      @token
+    end
   end
 end
