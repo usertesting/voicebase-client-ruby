@@ -18,10 +18,9 @@ And then execute:
 
 This gem is compatible with Ruby versions:
 
-* 2.0.x
-* 2.1.x
-* 2.2.x
-* 2.3.x
+* 2.2.8
+* 2.3.5
+* 2.4.2
 
 ## Usage
 
