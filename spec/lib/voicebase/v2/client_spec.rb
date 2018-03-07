@@ -19,8 +19,20 @@ describe VoiceBase::V2::Client do
 
   let(:auth_token) { "My-Auth-Token" }
 
-  before do
-    client.token = double("voicebase token", token: auth_token)
+  context "with a supplied bearer token" do
+    let(:fake_token) { "abcdabcd1234234123" }
+
+    before do
+      allow(ENV).to receive(:[]).and_call_original
+      allow(ENV).to receive(:[]).with("VOICEBASE_BEARER_TOKEN").and_return(fake_token)
+    end
+
+    describe "#authenticate!" do
+      it "already has a bearer token set" do
+        expect(client.token).to be_a(VoiceBase::Client::Token)
+        expect(client.token.token).to eq(fake_token)
+      end
+    end
   end
 
   context "pre-authentication" do
@@ -49,6 +61,8 @@ describe VoiceBase::V2::Client do
   end
 
   context "post-authentication" do
+    before { client.token = double("voicebase token", token: auth_token) }
+
     let(:media_id) { "some-media-id" }
     let(:voicebase_args) { {
         media_id: media_id

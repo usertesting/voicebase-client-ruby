@@ -26,6 +26,10 @@ module VoiceBase
       @user_agent          = args[:user_agent] || "usertesting-client/#{VoiceBase::version}"
       @locale              = args[:locale] || 'en'  # US English
 
+      if ENV['VOICEBASE_BEARER_TOKEN']
+        @token = VoiceBase::Client::Token.new(ENV['VOICEBASE_BEARER_TOKEN'])
+      end
+
       if @api_version.to_f < 2.0
         self.extend(VoiceBase::V1::Client)
       else
