@@ -29,6 +29,7 @@ module VoiceBase
         media_url = require_media_file_or_url(args)
         form_args = form_args(media_url, args[:language]) # language codes: en-US (default), en-UK, en-AU
         form_args.merge! metadata(args[:external_id]) if args[:external_id]
+        form_args['configuration']['configuration'].merge! args[:configuration] if args[:configuration]
 
         response = self.class.post(
             uri + '/media',
