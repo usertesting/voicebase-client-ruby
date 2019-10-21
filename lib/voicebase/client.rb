@@ -32,9 +32,14 @@ module VoiceBase
 
       if @api_version.to_f < 2.0
         self.extend(VoiceBase::V1::Client)
-      else
+      elsif  @api_version.to_f == 2.0
         self.extend(VoiceBase::V2::Client)
+      elsif @api_version.to_f == 3.0
+        self.extend(VoiceBase::V3::Client)
+      else
+        raise "Unknown version"
       end
+
     end
 
     def uri
