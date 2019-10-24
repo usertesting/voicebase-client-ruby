@@ -2,10 +2,20 @@ require "spec_helper"
 require "json"
 
 describe VoiceBase::Response do
-  let(:subject) { described_class.new(http_response, "3") }
+  let(:subject) { described_class.new(http_response, version) }
+  let(:version) { "3" }
   let(:http_response) { double(:voice_response, parsed_response: json_body) }
   let(:raw_body) { File.open("spec/fixtures/v3/response_raw.txt").read }
   let(:json_body) { JSON.load(raw_body) }
+
+  context "when the version is not supported" do
+    let(:version) { "9999" }
+    it "raises an error" do
+      expect {
+        subject
+      }.to raise_error(VoiceBase::UnknownApiVersion)
+    end
+  end
 
   describe "#media_id" do
     it "is correct" do
