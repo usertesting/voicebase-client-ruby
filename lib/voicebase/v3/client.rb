@@ -28,8 +28,8 @@ module VoiceBase
       end
 
       def upload_media(args = {}, headers = {})
-        media_url = require_media_file_or_url(args)
-        form_args = form_args(media_url, args[:language]) # language codes: en-US (default), en-UK, en-AU
+        require_media_file_or_url!(args)
+        form_args = form_args(args[:media_url], args[:media_file], args[:language])
         form_args.merge! metadata(args[:external_id]) if args[:external_id]
 
         response = self.class.post(
@@ -118,9 +118,8 @@ module VoiceBase
 
       private
 
-      def form_args(media_url, language = nil)
+      def form_args(media_url, media_file, language = nil)
         args = {
-          media: media_url,
           configuration: {
             speechModel: {
               language: "en-US",
@@ -138,6 +137,8 @@ module VoiceBase
           }
         }
 
+        args[:mediaUrl] = media_url if media_url
+        args[:media] = media_file if media_file
         args
       end
 
@@ -173,7 +174,6 @@ module VoiceBase
 
       def multipart_query(params)
         fp = []
-
         params.each do |k, v|
           if v.respond_to?(:path) and v.respond_to?(:read) then
             fp.push(FileParam.new(k, v.path, v.read))
@@ -189,12 +189,8 @@ module VoiceBase
         query
       end
 
-      def require_media_file_or_url(args = {})
-        media = if args[:media_url]
-          args[:media_url]
-        elsif args[:media_file]
-          args[:media_file]
-        else
+      def require_media_file_or_url!(args = {})
+        if args[:media_url].nil? and args[:media_file].nil?
           raise ArgumentError, "Missing argument :media_url or :media_file"
         end
       end
