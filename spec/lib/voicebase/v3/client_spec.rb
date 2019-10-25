@@ -16,7 +16,7 @@ describe VoiceBase::V3::Client do
         "https://apis.voicebase.com/v3/access/users/admin/tokens",
         basic_auth: { username: "auth_key", password: "secret" },
         headers: {
-          "User-Agent"   => "usertesting-client/1.3.1",
+          "User-Agent"   => "usertesting-client/1.3.0",
           "Accept"       => "application/json"
         }
       )
@@ -28,10 +28,35 @@ describe VoiceBase::V3::Client do
     let(:token_response) { double(:response, tokens: [ { "token" => "foo" } ]) }
     let(:file_stream) { double(:io, path: "foo/bar.mp4", read: "foobar") }
 
+    let(:config) {
+      {
+        speechModel: {
+          language: "en-US",
+          extensions: [
+              "usertesting"
+          ],
+          features: [
+              "advancedPunctuation"
+          ]
+        },
+        knowledge: {
+          enableDiscovery: true,
+          enableExternalDataSources: false
+        }
+      }
+    }
+
+    let(:metadata) {
+      {
+        externalId: "foo"
+      }
+    }
+
     before do
       allow(VoiceBase::Client).to receive(:post)
       allow(VoiceBase::Response).to receive(:new).and_return(token_response)
       allow(VoiceBase::Client).to receive(:get)
+      allow(SecureRandom).to receive(:hex).and_return("0123456789ABLEWASIEREISAWELBA9876543210")
     end
 
     context "when uploading a file" do
@@ -41,7 +66,7 @@ describe VoiceBase::V3::Client do
             "Authorization"=>"Bearer foo",
             "Content-Type"=>
               "multipart/form-data; boundary=0123456789ABLEWASIEREISAWELBA9876543210",
-              "User-Agent"=>"usertesting-client/1.3.1"
+              "User-Agent"=>"usertesting-client/1.3.0"
           },
           body: <<-BODY.strip.gsub("\n", "\r\n")
 --0123456789ABLEWASIEREISAWELBA9876543210
@@ -61,7 +86,7 @@ Content-Disposition: form-data; name="metadata"
 --0123456789ABLEWASIEREISAWELBA9876543210--
 BODY
         )
-        client.upload_media(media_file: file_stream, external_id: "foo")
+        client.upload_media(media_file: file_stream, external_id: "foo", config: config, metadata: metadata)
       end
     end
 
@@ -72,7 +97,7 @@ BODY
             "Authorization"=>"Bearer foo",
             "Content-Type"=>
               "multipart/form-data; boundary=0123456789ABLEWASIEREISAWELBA9876543210",
-              "User-Agent"=>"usertesting-client/1.3.1"
+              "User-Agent"=>"usertesting-client/1.3.0"
           },
           body: <<-BODY.strip.gsub("\n", "\r\n")
 --0123456789ABLEWASIEREISAWELBA9876543210
@@ -90,7 +115,7 @@ Content-Disposition: form-data; name="metadata"
 --0123456789ABLEWASIEREISAWELBA9876543210--
 BODY
         )
-        client.upload_media(media_url: "https:://s3.amazon.com/audio.m4a", external_id: "foo")
+        client.upload_media(media_url: "https:://s3.amazon.com/audio.m4a", external_id: "foo", config: config, metadata: metadata)
       end
     end
 
