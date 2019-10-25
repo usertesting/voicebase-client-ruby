@@ -59,11 +59,25 @@ describe VoiceBase::Response do
     it "is correct" do
       expect(subject.keywords).to eq(json_body["knowledge"]["keywords"])
     end
+
+    context "when keywords are not in the response" do
+      it "return nil" do
+        json_body["knowledge"] = nil
+        expect(subject.keywords).to be_nil
+      end
+    end
   end
 
   describe "#topics" do
     it "is correct" do
       expect(subject.topics).to eq(json_body["knowledge"]["topics"])
+    end
+
+    context "when topics are not in the response" do
+      it "return nil" do
+        json_body["knowledge"] = nil
+        expect(subject.topics).to be_nil
+      end
     end
   end
 end

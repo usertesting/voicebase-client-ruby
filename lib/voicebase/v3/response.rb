@@ -28,14 +28,18 @@ module VoiceBase
       end
 
       def keywords
-        voicebase_response["knowledge"]["keywords"]
+        knowledge["keywords"]
       end
 
       def topics
-        voicebase_response['knowledge']['topics']
+        knowledge['topics']
       end
 
       private
+
+      def knowledge
+        voicebase_response.fetch("knowledge", {}) || {}
+      end
 
       def voicebase_response
         http_response.parsed_response
