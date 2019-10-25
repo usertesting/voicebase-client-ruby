@@ -16,7 +16,7 @@ describe VoiceBase::V3::Client do
         "https://apis.voicebase.com/v3/access/users/admin/tokens",
         basic_auth: { username: "auth_key", password: "secret" },
         headers: {
-          "User-Agent"   => "usertesting-client/1.3.0",
+          "User-Agent"   => "usertesting-client/1.3.1",
           "Accept"       => "application/json"
         }
       )
@@ -41,7 +41,7 @@ describe VoiceBase::V3::Client do
             "Authorization"=>"Bearer foo",
             "Content-Type"=>
               "multipart/form-data; boundary=0123456789ABLEWASIEREISAWELBA9876543210",
-              "User-Agent"=>"usertesting-client/1.3.0"
+              "User-Agent"=>"usertesting-client/1.3.1"
           },
           body: <<-BODY.strip.gsub("\n", "\r\n")
 --0123456789ABLEWASIEREISAWELBA9876543210
@@ -54,10 +54,14 @@ Content-Type: application/mp4
 
 foobar
 
+--0123456789ABLEWASIEREISAWELBA9876543210
+Content-Disposition: form-data; name="metadata"
+
+{"externalId":"foo"}
 --0123456789ABLEWASIEREISAWELBA9876543210--
 BODY
         )
-        client.upload_media(media_file: file_stream)
+        client.upload_media(media_file: file_stream, external_id: "foo")
       end
     end
 
@@ -68,7 +72,7 @@ BODY
             "Authorization"=>"Bearer foo",
             "Content-Type"=>
               "multipart/form-data; boundary=0123456789ABLEWASIEREISAWELBA9876543210",
-              "User-Agent"=>"usertesting-client/1.3.0"
+              "User-Agent"=>"usertesting-client/1.3.1"
           },
           body: <<-BODY.strip.gsub("\n", "\r\n")
 --0123456789ABLEWASIEREISAWELBA9876543210
@@ -79,10 +83,14 @@ Content-Disposition: form-data; name=\"configuration\"
 Content-Disposition: form-data; name=\"mediaUrl\"
 
 https:://s3.amazon.com/audio.m4a
+--0123456789ABLEWASIEREISAWELBA9876543210
+Content-Disposition: form-data; name="metadata"
+
+{"externalId":"foo"}
 --0123456789ABLEWASIEREISAWELBA9876543210--
 BODY
         )
-        client.upload_media(media_url: "https:://s3.amazon.com/audio.m4a")
+        client.upload_media(media_url: "https:://s3.amazon.com/audio.m4a", external_id: "foo")
       end
     end
 

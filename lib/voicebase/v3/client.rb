@@ -145,11 +145,7 @@ module VoiceBase
       def metadata(external_id)
         {
           'metadata' => {
-            'metadata' => {
-              'external' => {
-                'id' => "#{external_id}"
-              }
-            }
+            'externalId' => "#{external_id}"
           }
         }
       end
