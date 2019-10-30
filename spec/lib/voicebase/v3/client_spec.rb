@@ -119,7 +119,7 @@ BODY
       end
     end
 
-    context "when media is specified" do
+    context "when media is not specified" do
       it "raises an error" do
         expect {
           client.upload_media()

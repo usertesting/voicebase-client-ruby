@@ -24,27 +24,13 @@ describe VoiceBase::Response do
   end
 
   describe "#transcript_ready?" do
-    context "when it's finished" do
-      let(:json_body) {
-        body = JSON.load(raw_body)
-        body["status"] = "finished"
-        body
-      }
-
-      it "is ready" do
-        expect(subject.transcript_ready?).to be_truthy
-      end
-    end
-
-    context "when it's running" do
-      let(:json_body) {
-        body = JSON.load(raw_body)
-        body["status"] = "running"
-        body
-      }
-
-      it "is not ready" do
-        expect(subject.transcript_ready?).to be_falsey
+    it "is correct" do
+      [
+        { status: "running", ready?: false },
+        { status: "finished", ready?: true }
+      ].each do |scenario|
+        http_response = double(:voice_response, parsed_response: { "status" => scenario[:status] }, code: 200)
+        expect(described_class.new(http_response, version).transcript_ready?).to be(scenario[:ready?])
       end
     end
   end
