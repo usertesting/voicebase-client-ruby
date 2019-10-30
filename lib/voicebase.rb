@@ -8,6 +8,7 @@ require "voicebase/helpers"
 
 require "voicebase/v1"
 require "voicebase/v2"
+require "voicebase/v3"
 
 require "voicebase/client"
 require "voicebase/client/token"

@@ -1,4 +1,5 @@
 module VoiceBase
+  class UnknownApiVersionError < StandardError; end;
   class Client
     include HTTParty
 
@@ -30,11 +31,16 @@ module VoiceBase
         @token = VoiceBase::Client::Token.new(ENV['VOICEBASE_BEARER_TOKEN'])
       end
 
-      if @api_version.to_f < 2.0
+      if @api_version.to_i < 2
         self.extend(VoiceBase::V1::Client)
-      else
+      elsif  @api_version.to_i == 2
         self.extend(VoiceBase::V2::Client)
+      elsif @api_version.to_i == 3
+        self.extend(VoiceBase::V3::Client)
+      else
+        raise UnknownApiVersionError
       end
+
     end
 
     def uri
