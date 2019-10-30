@@ -11,7 +11,7 @@ describe VoiceBase::Client do
     it "raises an error" do
       expect {
         described_class.new(api_version: "9999")
-      }.to raise_error(VoiceBase::UnknownApiVersion)
+      }.to raise_error(VoiceBase::UnknownApiVersionError)
     end
   end
 end

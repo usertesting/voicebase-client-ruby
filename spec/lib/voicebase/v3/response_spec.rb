@@ -13,7 +13,7 @@ describe VoiceBase::Response do
     it "raises an error" do
       expect {
         subject
-      }.to raise_error(VoiceBase::UnknownApiVersion)
+      }.to raise_error(VoiceBase::UnknownApiVersionError)
     end
   end
 

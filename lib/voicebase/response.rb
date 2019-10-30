@@ -14,7 +14,7 @@ module VoiceBase
       elsif api_version.to_f == 3.0
         self.extend(VoiceBase::V3::Response)
       else
-         raise UnknownApiVersion
+         raise UnknownApiVersionError
       end
     end
 

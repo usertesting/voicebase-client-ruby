@@ -1,5 +1,5 @@
 module VoiceBase
-  class UnknownApiVersion < StandardError; end;
+  class UnknownApiVersionError < StandardError; end;
   class Client
     include HTTParty
 
@@ -38,7 +38,7 @@ module VoiceBase
       elsif @api_version.to_f == 3.0
         self.extend(VoiceBase::V3::Client)
       else
-        raise UnknownApiVersion
+        raise UnknownApiVersionError
       end
 
     end
