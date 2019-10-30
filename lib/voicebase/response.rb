@@ -7,11 +7,11 @@ module VoiceBase
 
     def initialize(http_response, api_version = "1.1")
       @http_response = http_response
-      if api_version.to_f < 2
+      if api_version.to_i < 2
         self.extend(VoiceBase::V1::Response)
-      elsif api_version.to_f == 2.0
+      elsif api_version.to_i == 2
         self.extend(VoiceBase::V2::Response)
-      elsif api_version.to_f == 3.0
+      elsif api_version.to_i == 3
         self.extend(VoiceBase::V3::Response)
       else
          raise UnknownApiVersionError
